@@ -401,24 +401,12 @@ function handleSubmit() {
   }
   formRow.style.display = "none";
   successMsg.classList.add("show");
-
-  // ── N8N WEBHOOK ──────────────────────────────────────────────────
-  // TODO: Replace with your n8n webhook URL when ready
-  const N8N_WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL_HERE";
-
-  if (N8N_WEBHOOK_URL !== "YOUR_N8N_WEBHOOK_URL_HERE") {
-    fetch(N8N_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        source: "AC Landing Page",
-        timestamp: new Date().toISOString()
-      })
-    }).catch(err => console.error("Webhook error:", err));
-  } else {
-    console.log("Email captured (webhook not yet configured):", email);
-  }
+  // Send to Google Apps Script → AC Email Waitlist sheet
+  fetch("https://script.google.com/macros/s/AKfycbycqnfW7OdPsc478dubHCqR1yvIPXSVF85A5tZbzDvdW7omQ7rTckAYWAIRJUxXZArLIQ/exec", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({ email: email, source: "Landing Page" })
+  });
 }
 document.getElementById("email-input").addEventListener("keypress", function(e) {
   if (e.key === "Enter") handleSubmit();
